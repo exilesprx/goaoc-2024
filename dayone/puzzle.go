@@ -20,7 +20,7 @@ func Puzzle(name string) int {
 	var rightNumbers []int = nil
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-    left, right := parseSides(scanner)
+		left, right := parseSides(scanner)
 		leftNumbers = append(leftNumbers, left)
 		rightNumbers = append(rightNumbers, right)
 	}
@@ -30,8 +30,8 @@ func Puzzle(name string) int {
 
 	sum := 0
 	for i := 0; i < len(leftNumbers); i++ {
-    number := leftNumbers[i]
-    sum += number * appearences(number, rightNumbers)
+		number := leftNumbers[i]
+		sum += number * appearences(number, rightNumbers)
 	}
 
 	return sum
@@ -52,12 +52,12 @@ func parseSides(scanner *bufio.Scanner) (int, int) {
 }
 
 func appearences(number int, numbers []int) int {
-  count := 0
-  for _, n := range numbers {
-    if n == number {
-      count += 1
-    }
-  }
+	count := 0
+	for _, n := range numbers {
+		if n == number {
+			count += 1
+		}
+	}
 
-  return count
+	return count
 }
