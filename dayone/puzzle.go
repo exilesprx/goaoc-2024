@@ -30,11 +30,8 @@ func Puzzle(name string) int {
 
 	sum := 0
 	for i := 0; i < len(leftNumbers); i++ {
-    if distance := leftNumbers[i] - rightNumbers[i]; distance < 0 {
-			sum += distance * -1
-		} else {
-			sum += distance
-		}
+    number := leftNumbers[i]
+    sum += number * appearences(number, rightNumbers)
 	}
 
 	return sum
@@ -52,4 +49,15 @@ func parseSides(scanner *bufio.Scanner) (int, int) {
 	}
 
 	return left, right
+}
+
+func appearences(number int, numbers []int) int {
+  count := 0
+  for _, n := range numbers {
+    if n == number {
+      count += 1
+    }
+  }
+
+  return count
 }
