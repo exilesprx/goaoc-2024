@@ -44,15 +44,7 @@ func Puzzle(f string) (int, error) {
 				continue
 			}
 
-			if !validDistance(previous - number) {
-				valid = false
-			}
-
-			if number < previous && increments {
-				valid = false
-			}
-
-			if number > previous && !increments {
+			if !validDistance(previous-number) || (number < previous && increments) || (number > previous && !increments) {
 				valid = false
 			}
 
