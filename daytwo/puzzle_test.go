@@ -7,8 +7,8 @@ import (
 
 func TestExampleInput(t *testing.T) {
 	result, _ := Puzzle("example.txt")
-	if result != 31 {
-		t.Errorf("Expected 31, but got %d", result)
+	if result != 2 {
+		t.Errorf("Expected 2, but got %d", result)
 	}
 }
 
