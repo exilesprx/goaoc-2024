@@ -1,7 +1,6 @@
 package dayone
 
 import (
-	"log"
 	"testing"
 )
 
@@ -14,5 +13,5 @@ func TestExampleInput(t *testing.T) {
 
 func TestPuzzleInput(t *testing.T) {
 	result := Puzzle("puzzle.txt")
-	log.Print("Puzzle result: ", result)
+	t.Skipf("Puzzle result: %d", result)
 }

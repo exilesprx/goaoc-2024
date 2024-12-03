@@ -1,22 +1,25 @@
 package daytwo
 
 import (
-	"log"
 	"testing"
 )
 
 func TestExampleInput(t *testing.T) {
-	result, _ := Puzzle("example.txt")
-	if result != 2 {
-		t.Errorf("Expected 2, but got %d", result)
+	result, err := Puzzle("example.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if result != 4 {
+		t.Errorf("Expected 4, but got %d", result)
 	}
 }
 
 func TestPuzzleInput(t *testing.T) {
 	result, err := Puzzle("puzzle.txt")
-  if err != nil {
-    t.Fatal(err)
-  }
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	log.Print("Puzzle result: ", result)
+	t.Skipf("Puzzle result: %d", result)
 }
