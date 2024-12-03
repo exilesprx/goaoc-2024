@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -20,42 +21,36 @@ func Puzzle(f string) (int, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		valid := true
-		increments := true
 		previous := 0
-		numbers := strings.Split(scanner.Text(), " ")
-		for _, r := range numbers {
-			number, err := strconv.Atoi(r)
+		text := strings.Split(scanner.Text(), " ")
+		numbers := []int{}
+		for _, r := range text {
+			n, err := strconv.Atoi(r)
 			if err != nil {
 				return 0, errors.New("Invalid number")
 			}
+			numbers = append(numbers, n)
+		}
 
+		iod := sort.IsSorted(sort.IntSlice(numbers)) || sort.IsSorted(sort.Reverse(sort.IntSlice(numbers)))
+		for _, n := range numbers {
 			if previous == 0 {
-				previous = number
-				next, err := strconv.Atoi(numbers[1])
-				if err != nil {
-					return 0, errors.New("Invalid number")
-				}
-
-				if next > previous {
-					increments = true
-				} else {
-					increments = false
-				}
+				previous = n
 				continue
 			}
 
-			if !validDistance(previous-number) || (number < previous && increments) || (number > previous && !increments) {
+			if !validDistance(previous - n) {
 				valid = false
+				break
 			}
 
-			previous = number
+			previous = n
 		}
 
-		if valid {
+		if valid && iod {
 			safeReports += 1
 		}
 	}
-
 	return safeReports, nil
 }
 
