@@ -1,0 +1,19 @@
+name: Test exercises
+
+on:
+  branches:
+    - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test exercises
+        run: |
+          set -e
+          for dir in $(find . -name go.mod -execdir pwd \;); do
+            cd "$dir"
+            go test -v ./...
+          done
