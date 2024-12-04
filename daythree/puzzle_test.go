@@ -11,8 +11,8 @@ func TestExampleInput(t *testing.T) {
 		t.Fatal(err)
 	}
 
-  if result != 161 {
-    t.Error("Expected 161, but got", result)
+  if result != 48 {
+    t.Error("Expected 48, but got", result)
   }
 }
 
