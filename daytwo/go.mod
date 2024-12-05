@@ -1,3 +1,3 @@
-module github.com/exilesprx/aoc-2024/daytwo
+module github.com/exilesprx/goaoc-2024/daytwo
 
 go 1.23.3
