@@ -16,7 +16,6 @@ func TestExampleInput(t *testing.T) {
 }
 
 func TestPuzzleInput(t *testing.T) {
-  t.Skip("Skipping test")
 	result, err := Puzzle("puzzle.txt")
 	if err != nil {
 		t.Fatalf("Puzzle errored: %v", err)

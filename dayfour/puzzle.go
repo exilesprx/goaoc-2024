@@ -2,7 +2,6 @@ package dayfour
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 )
 
@@ -29,35 +28,27 @@ func Puzzle(f string) (int, error) {
 		for x := 0; x < len(grid[y]); x += 1 {
 			if grid[y][x] == 'X' {
 				if north(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 				if northeast(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 				if east(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 				if southeast(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 				if south(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 				if southwest(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 				if west(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 				if northwest(grid, x, y) {
-          fmt.Println("Found at ", x, y)
 					count += 1
 				}
 			}
@@ -68,7 +59,7 @@ func Puzzle(f string) (int, error) {
 }
 
 func north(grid [][]rune, x, y int) bool {
-	if y <= 3 {
+	if y < 3 {
 		return false
 	}
 	word := ""
@@ -80,7 +71,7 @@ func north(grid [][]rune, x, y int) bool {
 }
 
 func south(grid [][]rune, x, y int) bool {
-	if y >= len(grid)-4 {
+	if y > len(grid)-4 {
 		return false
 	}
 	word := ""
@@ -91,7 +82,7 @@ func south(grid [][]rune, x, y int) bool {
 }
 
 func east(grid [][]rune, x, y int) bool {
-	if x >= len(grid[y])-4 {
+	if x > len(grid[y])-4 {
 		return false
 	}
 	word := ""
@@ -102,7 +93,7 @@ func east(grid [][]rune, x, y int) bool {
 }
 
 func west(grid [][]rune, x, y int) bool {
-	if x <= 3 {
+	if x < 3 {
 		return false
 	}
 	word := ""
@@ -113,7 +104,7 @@ func west(grid [][]rune, x, y int) bool {
 }
 
 func northeast(grid [][]rune, x, y int) bool {
-	if y <= 3 || x >= len(grid[y])-4 {
+	if y < 3 || x > len(grid[y])-4 {
 		return false
 	}
 	word := ""
@@ -124,7 +115,7 @@ func northeast(grid [][]rune, x, y int) bool {
 }
 
 func northwest(grid [][]rune, x, y int) bool {
-	if y <= 3 || x <= 3 {
+	if y < 3 || x < 3 {
 		return false
 	}
 	word := ""
@@ -135,7 +126,7 @@ func northwest(grid [][]rune, x, y int) bool {
 }
 
 func southeast(grid [][]rune, x, y int) bool {
-	if y >= len(grid)-4 || x >= len(grid[y])-4 {
+	if y > len(grid)-4 || x > len(grid[y])-4 {
 		return false
 	}
 	word := ""
@@ -146,7 +137,7 @@ func southeast(grid [][]rune, x, y int) bool {
 }
 
 func southwest(grid [][]rune, x, y int) bool {
-	if y >= len(grid)-4 || x <= 3 {
+	if y > len(grid)-4 || x < 3 {
 		return false
 	}
 	word := ""
