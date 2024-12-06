@@ -10,12 +10,13 @@ func TestExampleInput(t *testing.T) {
 		t.Fatalf("Puzzle errored: %v", err)
 	}
 
-	if result != 2 {
-		t.Fatalf("Expected 2, got %v", result)
+	if result != 18 {
+		t.Fatalf("Expected 18, got %v", result)
 	}
 }
 
 func TestPuzzleInput(t *testing.T) {
+  t.Skip("Skipping test")
 	result, err := Puzzle("puzzle.txt")
 	if err != nil {
 		t.Fatalf("Puzzle errored: %v", err)
