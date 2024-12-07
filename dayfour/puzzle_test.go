@@ -10,8 +10,8 @@ func TestExampleInput(t *testing.T) {
 		t.Fatalf("Puzzle errored: %v", err)
 	}
 
-	if result != 18 {
-		t.Fatalf("Expected 18, got %v", result)
+	if result != 9 {
+		t.Fatalf("Expected 9, got %v", result)
 	}
 }
 

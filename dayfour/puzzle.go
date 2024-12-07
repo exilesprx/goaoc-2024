@@ -26,29 +26,8 @@ func Puzzle(f string) (int, error) {
 	count := 0
 	for ; y < len(grid); y += 1 {
 		for x := 0; x < len(grid[y]); x += 1 {
-			if grid[y][x] == 'X' {
-				if north(grid, x, y) {
-					count += 1
-				}
-				if northeast(grid, x, y) {
-					count += 1
-				}
-				if east(grid, x, y) {
-					count += 1
-				}
-				if southeast(grid, x, y) {
-					count += 1
-				}
-				if south(grid, x, y) {
-					count += 1
-				}
-				if southwest(grid, x, y) {
-					count += 1
-				}
-				if west(grid, x, y) {
-					count += 1
-				}
-				if northwest(grid, x, y) {
+			if grid[y][x] == 'A' {
+				if backslash(grid, y, x) && forwardslash(grid, y, x) {
 					count += 1
 				}
 			}
@@ -58,91 +37,18 @@ func Puzzle(f string) (int, error) {
 	return count, nil
 }
 
-func north(grid [][]rune, x, y int) bool {
-	if y < 3 {
+func forwardslash(grid [][]rune, y, x int) bool {
+	if y-1 < 0 || x+1 >= len(grid[y]) || y+1 >= len(grid) || x-1 < 0 {
 		return false
 	}
-	word := ""
-	for i := y - 1; i >= y-3; i -= 1 {
-		word += string(grid[i][x])
-	}
-
-	return word == "MAS"
+	word := string(grid[y-1][x+1]) + string(grid[y][x]) + string(grid[y+1][x-1])
+	return word == "MAS" || word == "SAM"
 }
 
-func south(grid [][]rune, x, y int) bool {
-	if y > len(grid)-4 {
+func backslash(grid [][]rune, y, x int) bool {
+	if y-1 < 0 || x-1 < 0 || y+1 >= len(grid) || x+1 >= len(grid[y]) {
 		return false
 	}
-	word := ""
-	for i := y + 1; i <= y+3; i += 1 {
-		word += string(grid[i][x])
-	}
-	return word == "MAS"
-}
-
-func east(grid [][]rune, x, y int) bool {
-	if x > len(grid[y])-4 {
-		return false
-	}
-	word := ""
-	for i := x + 1; i <= x+3; i += 1 {
-		word += string(grid[y][i])
-	}
-	return word == "MAS"
-}
-
-func west(grid [][]rune, x, y int) bool {
-	if x < 3 {
-		return false
-	}
-	word := ""
-	for i := x - 1; i >= x-3; i -= 1 {
-		word += string(grid[y][i])
-	}
-	return word == "MAS"
-}
-
-func northeast(grid [][]rune, x, y int) bool {
-	if y < 3 || x > len(grid[y])-4 {
-		return false
-	}
-	word := ""
-	for i := 1; i <= 3; i += 1 {
-		word += string(grid[y-i][x+i])
-	}
-	return word == "MAS"
-}
-
-func northwest(grid [][]rune, x, y int) bool {
-	if y < 3 || x < 3 {
-		return false
-	}
-	word := ""
-	for i := 1; i <= 3; i += 1 {
-		word += string(grid[y-i][x-i])
-	}
-	return word == "MAS"
-}
-
-func southeast(grid [][]rune, x, y int) bool {
-	if y > len(grid)-4 || x > len(grid[y])-4 {
-		return false
-	}
-	word := ""
-	for i := 1; i <= 3; i += 1 {
-		word += string(grid[y+i][x+i])
-	}
-	return word == "MAS"
-}
-
-func southwest(grid [][]rune, x, y int) bool {
-	if y > len(grid)-4 || x < 3 {
-		return false
-	}
-	word := ""
-	for i := 1; i <= 3; i += 1 {
-		word += string(grid[y+i][x-i])
-	}
-	return word == "MAS"
+	word := string(grid[y-1][x-1]) + string(grid[y][x]) + string(grid[y+1][x+1])
+	return word == "MAS" || word == "SAM"
 }
