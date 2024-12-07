@@ -29,18 +29,12 @@ func Puzzle(f string) (int, error) {
 		for x := 0; x < len(grid[y]); x += 1 {
 			if grid[y][x] == 'A' {
 				wg.Add(1)
-				go func(r, c int) {
-					defer wg.Done()
-					xmas <- forwardslash(grid, r, c) && backslash(grid, r, c)
-				}(y, x)
+				go calculate(grid, &wg, xmas, y, x)
 			}
 		}
 	}
 
-	go func() {
-		wg.Wait()
-		close(xmas)
-	}()
+	go waitOnCalculate(&wg, xmas)
 
 	for found := range xmas {
 		if found {
@@ -49,6 +43,16 @@ func Puzzle(f string) (int, error) {
 	}
 
 	return count, nil
+}
+
+func calculate(grid [][]rune, wg *sync.WaitGroup, xmas chan<- bool, y, x int) {
+	defer wg.Done()
+	xmas <- forwardslash(grid, y, x) && backslash(grid, y, x)
+}
+
+func waitOnCalculate(wg *sync.WaitGroup, xmas chan<- bool) {
+	wg.Wait()
+	close(xmas)
 }
 
 func forwardslash(grid [][]rune, y, x int) bool {
