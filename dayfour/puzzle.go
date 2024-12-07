@@ -3,6 +3,7 @@ package dayfour
 import (
 	"bufio"
 	"os"
+	"sync"
 )
 
 func Puzzle(f string) (int, error) {
@@ -13,8 +14,7 @@ func Puzzle(f string) (int, error) {
 
 	grid := [][]rune{}
 	scanner := bufio.NewScanner(file)
-	y := 0
-	for ; scanner.Scan(); y += 1 {
+	for y := 0; scanner.Scan(); y += 1 {
 		line := scanner.Text()
 		grid = append(grid, []rune{})
 		for _, r := range line {
@@ -22,15 +22,29 @@ func Puzzle(f string) (int, error) {
 		}
 	}
 
-	y = 0
 	count := 0
-	for ; y < len(grid); y += 1 {
+	xmas := make(chan bool)
+	wg := sync.WaitGroup{}
+	for y := 0; y < len(grid); y += 1 {
 		for x := 0; x < len(grid[y]); x += 1 {
 			if grid[y][x] == 'A' {
-				if backslash(grid, y, x) && forwardslash(grid, y, x) {
-					count += 1
-				}
+				wg.Add(1)
+				go func(r, c int) {
+					defer wg.Done()
+					xmas <- forwardslash(grid, r, c) && backslash(grid, r, c)
+				}(y, x)
 			}
+		}
+	}
+
+	go func() {
+		wg.Wait()
+		close(xmas)
+	}()
+
+	for found := range xmas {
+		if found {
+			count += 1
 		}
 	}
 
