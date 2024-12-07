@@ -14,8 +14,4 @@ jobs:
       - name: Test exercises
         run: |
           set -e
-          for dir in $(find . -type d); do
-            cd "$dir"
-            echo "Running test for $dir"
-            go test -v ./...
-          done
+          go test -v ./...
