@@ -22,7 +22,6 @@ func Puzzle(f string) (int, error) {
 		}
 	}
 
-	count := 0
 	xmas := make(chan bool)
 	wg := sync.WaitGroup{}
 	for y := 0; y < len(grid); y += 1 {
@@ -36,23 +35,12 @@ func Puzzle(f string) (int, error) {
 
 	go waitOnCalculate(&wg, xmas)
 
-	for found := range xmas {
-		if found {
-			count += 1
-		}
-	}
-
-	return count, nil
+	return receive(xmas), nil
 }
 
 func calculate(grid [][]rune, wg *sync.WaitGroup, xmas chan<- bool, y, x int) {
 	defer wg.Done()
 	xmas <- forwardslash(grid, y, x) && backslash(grid, y, x)
-}
-
-func waitOnCalculate(wg *sync.WaitGroup, xmas chan<- bool) {
-	wg.Wait()
-	close(xmas)
 }
 
 func forwardslash(grid [][]rune, y, x int) bool {
@@ -69,4 +57,19 @@ func backslash(grid [][]rune, y, x int) bool {
 	}
 	word := string(grid[y-1][x-1]) + string(grid[y][x]) + string(grid[y+1][x+1])
 	return word == "MAS" || word == "SAM"
+}
+
+func waitOnCalculate(wg *sync.WaitGroup, xmas chan<- bool) {
+	wg.Wait()
+	close(xmas)
+}
+
+func receive(xmas <-chan bool) int {
+	count := 0
+	for found := range xmas {
+		if found {
+			count += 1
+		}
+	}
+	return count
 }
