@@ -83,8 +83,8 @@ func Puzzle(f string) (int, error) {
 			}
 
 			sorted := g.topologicalSort()
-			if slicesEqual(g.vertices, sorted) {
-				sum += g.middleVertice()
+			if !slicesEqual(g.vertices, sorted) {
+				sum += sorted[len(sorted)/2]
 			}
 		}
 	}
