@@ -10,8 +10,8 @@ func TestExample(t *testing.T) {
 		t.Fatalf("Error: %v", err)
 	}
 
-	if result != 2 {
-		t.Fatalf("Expected 2, got %v", result)
+	if result != 143 {
+		t.Fatalf("Expected 143, got %v", result)
 	}
 }
 
