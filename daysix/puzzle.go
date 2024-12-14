@@ -2,12 +2,16 @@ package daysix
 
 import (
 	"bufio"
+	"errors"
+	"fmt"
 	"os"
+	"strconv"
 )
 
 type Guard struct {
-	position  []int
-	direction rune
+	obstructions map[string]int
+	position     []int
+	direction    rune
 }
 
 func Puzzle(f string) (int, error) {
@@ -18,9 +22,12 @@ func Puzzle(f string) (int, error) {
 
 	scanner := bufio.NewScanner(file)
 	grid := [][]rune{}
+	var startingLocation []int
+	var startingDirection rune
 	guard := Guard{
-		position:  []int{0, 0},
-		direction: '^',
+		position:     []int{0, 0},
+		direction:    '^',
+		obstructions: make(map[string]int),
 	}
 	for y := 0; scanner.Scan(); y++ {
 		line := scanner.Text()
@@ -28,90 +35,146 @@ func Puzzle(f string) (int, error) {
 		for x, r := range line {
 			grid[y] = append(grid[y], r)
 			if r == '^' || r == 'v' || r == '<' || r == '>' {
-				guard.direction = r
-				guard.position = []int{y, x}
+				startingDirection = r
+				startingLocation = []int{y, x}
 			}
 		}
 	}
 
-	offgrid := false
-	for !offgrid {
-		switch guard.direction {
-		case '^':
-			offgrid = movenorth(grid, &guard, guard.position[0], guard.position[1])
-		case 'v':
-			offgrid = movesouth(grid, &guard, guard.position[0], guard.position[1])
-		case '>':
-			offgrid = moveeast(grid, &guard, guard.position[0], guard.position[1])
-		case '<':
-			offgrid = movewest(grid, &guard, guard.position[0], guard.position[1])
+	loopsDetected := 0
+	for y := 0; y < len(grid); y++ {
+		for x := 0; x < len(grid[y]); x++ {
+			offgrid := false
+			guard.direction = startingDirection
+			guard.position = startingLocation
+			if y == guard.position[0] && x == guard.position[1] || grid[y][x] == '#' {
+				continue
+			}
+			grid[y][x] = '0'
+		outer:
+			for !offgrid {
+				switch guard.direction {
+				case '^':
+					offgrid, err = movenorth(grid, &guard, guard.position[0], guard.position[1])
+					if err != nil {
+						loopsDetected += 1
+						break outer
+					}
+				case 'v':
+					offgrid, err = movesouth(grid, &guard, guard.position[0], guard.position[1])
+					if err != nil {
+						loopsDetected += 1
+						break outer
+					}
+				case '>':
+					offgrid, err = moveeast(grid, &guard, guard.position[0], guard.position[1])
+					if err != nil {
+						loopsDetected += 1
+						break outer
+					}
+				case '<':
+					offgrid, err = movewest(grid, &guard, guard.position[0], guard.position[1])
+					if err != nil {
+						loopsDetected += 1
+						break outer
+					}
+				}
+			}
+			grid[y][x] = '.'
+			guard.obstructions = make(map[string]int)
 		}
 	}
 
-	return calculateDistinctVisits(grid), nil
+	return loopsDetected, nil
 }
 
-// Movenorth moves the guard north until it hits a wall or the edge of the grid.
+// movenorth moves the guard north until it hits a wall or the edge of the grid.
 // It returns true if the guard is off the grid
-func movenorth(grid [][]rune, guard *Guard, y, x int) bool {
+func movenorth(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 	for ; y >= 0; y-- {
-		if grid[y][x] == '#' {
+		key := strconv.Itoa(y) + ":" + strconv.Itoa(x)
+		if grid[y][x] == '#' || grid[y][x] == '0' {
 			guard.direction = '>'
 			guard.position = []int{y + 1, x}
-			return false
+
+			guard.obstructions[key] += 1
+			if guard.obstructions[key] >= 4 {
+				return false, errors.New("Loop detected")
+			}
+
+			return false, nil
 		}
+
 		grid[y][x] = 'X'
 	}
 
-	return true
+	return true, nil
 }
 
-// Movesouth moves the guard south until it hits a wall or the edge of the grid.
+// movesouth moves the guard south until it hits a wall or the edge of the grid.
 // It returns true if the guard is off the grid
-func movesouth(grid [][]rune, guard *Guard, y, x int) bool {
+func movesouth(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 	for ; y < len(grid); y++ {
-		if grid[y][x] == '#' {
+		key := strconv.Itoa(y) + ":" + strconv.Itoa(x)
+		if grid[y][x] == '#' || grid[y][x] == '0' {
 			guard.direction = '<'
 			guard.position = []int{y - 1, x}
-			return false
+
+			guard.obstructions[key] += 1
+			if guard.obstructions[key] >= 4 {
+				return false, errors.New("Loop detected")
+			}
+			return false, nil
 		}
 		grid[y][x] = 'X'
 	}
 
-	return true
+	return true, nil
 }
 
-// Movewest moves the guard west until it hits a wall or the edge of the grid.
+// movewest moves the guard west until it hits a wall or the edge of the grid.
 // It returns true if the guard is off the grid
-func movewest(grid [][]rune, guard *Guard, y, x int) bool {
+func movewest(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 	for ; x >= 0; x-- {
-		if grid[y][x] == '#' {
+		key := strconv.Itoa(y) + ":" + strconv.Itoa(x)
+		if grid[y][x] == '#' || grid[y][x] == '0' {
 			guard.direction = '^'
 			guard.position = []int{y, x + 1}
-			return false
+
+			guard.obstructions[key] += 1
+			if guard.obstructions[key] >= 4 {
+				return false, errors.New("Loop detected")
+			}
+			return false, nil
 		}
 		grid[y][x] = 'X'
 	}
 
-	return true
+	return true, nil
 }
 
-// Moveeast moves the guard east until it hits a wall or the edge of the grid.
+// moveeast moves the guard east until it hits a wall or the edge of the grid.
 // It returns true if the guard is off the grid
-func moveeast(grid [][]rune, guard *Guard, y, x int) bool {
+func moveeast(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 	for ; x < len(grid[y]); x++ {
-		if grid[y][x] == '#' {
+		key := strconv.Itoa(y) + ":" + strconv.Itoa(x)
+		if grid[y][x] == '#' || grid[y][x] == '0' {
 			guard.direction = 'v'
 			guard.position = []int{y, x - 1}
-			return false
+
+			guard.obstructions[key] += 1
+			if guard.obstructions[key] >= 4 {
+				return false, errors.New("Loop detected")
+			}
+			return false, nil
 		}
 		grid[y][x] = 'X'
 	}
 
-	return true
+	return true, nil
 }
 
-// CalculateDistinctVisits counts the number of distinct visits in the grid.
+// calculateDistinctVisits counts the number of distinct visits in the grid.
 func calculateDistinctVisits(grid [][]rune) int {
 	visits := 0
 	for _, row := range grid {
@@ -123,4 +186,22 @@ func calculateDistinctVisits(grid [][]rune) int {
 	}
 
 	return visits
+}
+
+// printGrid prints the grid to the console.
+func printGrid(grid [][]rune) {
+	for _, row := range grid {
+		for _, r := range row {
+			fmt.Print(string(r))
+		}
+		fmt.Println()
+	}
+}
+
+// printObstructions prints the obstructions to the console.
+func printObstructions(guard Guard) {
+	for key, count := range guard.obstructions {
+		fmt.Printf("Positions %v and Count %v", key, count)
+		fmt.Println()
+	}
 }
