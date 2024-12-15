@@ -99,7 +99,7 @@ func movenorth(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 
 			guard.obstructions[key] += 1
 			if guard.obstructions[key] >= 4 {
-				return false, errors.New("Loop detected")
+				return false, errors.New("loop detected")
 			}
 
 			return false, nil
@@ -122,7 +122,7 @@ func movesouth(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 
 			guard.obstructions[key] += 1
 			if guard.obstructions[key] >= 4 {
-				return false, errors.New("Loop detected")
+				return false, errors.New("loop detected")
 			}
 			return false, nil
 		}
@@ -143,7 +143,7 @@ func movewest(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 
 			guard.obstructions[key] += 1
 			if guard.obstructions[key] >= 4 {
-				return false, errors.New("Loop detected")
+				return false, errors.New("loop detected")
 			}
 			return false, nil
 		}
@@ -164,7 +164,7 @@ func moveeast(grid [][]rune, guard *Guard, y, x int) (bool, error) {
 
 			guard.obstructions[key] += 1
 			if guard.obstructions[key] >= 4 {
-				return false, errors.New("Loop detected")
+				return false, errors.New("loop detected")
 			}
 			return false, nil
 		}
