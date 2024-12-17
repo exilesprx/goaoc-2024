@@ -2,6 +2,7 @@ package dayseven
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -19,16 +20,21 @@ func Puzzle(f string) (int, error) {
 		line := scanner.Text()
 		parts := strings.Split(line, ": ")
 		numbers := strings.Split(parts[1], " ")
-		possibleCombos := 1 << (len(numbers) - 1)
+		possibleCombos := 1 << (2 * (len(numbers) - 1))
 		for mask := 0; mask < possibleCombos; mask++ {
 			result, _ := strconv.Atoi(numbers[0])
 			for i := 0; i < len(numbers)-1; i++ {
-				if mask&(1<<i) != 0 {
+				op := (mask >> (2 * i)) & 3
+				switch op {
+				case 1:
 					n, _ := strconv.Atoi(numbers[i+1])
 					result *= n
-				} else {
+				case 2:
 					n, _ := strconv.Atoi(numbers[i+1])
 					result += n
+				default:
+					n, _ := strconv.Atoi(fmt.Sprintf("%d%s", result, numbers[i+1]))
+					result = n
 				}
 			}
 
