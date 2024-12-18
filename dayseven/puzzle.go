@@ -2,7 +2,6 @@ package dayseven
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -44,8 +43,16 @@ func evaluate(numbers []string, target int, idx int, result int) bool {
 		return true
 	}
 
-	concat := parseInt(fmt.Sprintf("%d%s", result, numbers[idx]))
+	concat := concatenate(result, n)
 	return evaluate(numbers, target, idx+1, concat)
+}
+
+func concatenate(result, number int) int {
+	factor := 1
+	for number/factor > 0 {
+		factor *= 10
+	}
+	return result*factor + number
 }
 
 func parseInt(number string) int {
