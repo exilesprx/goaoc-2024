@@ -19,6 +19,7 @@ func Puzzle(f string) (int, error) {
 		return 0, err
 	}
 
+	// grid := [][]rune{}
 	frequencyMap := make(map[rune]map[string]Point)
 	antinodes := map[string]Point{}
 	rows := 0
@@ -26,7 +27,9 @@ func Puzzle(f string) (int, error) {
 	scanner := bufio.NewScanner(file)
 	for y := 0; scanner.Scan(); y++ {
 		line := scanner.Text()
+		// grid = append(grid, []rune{})
 		for x, r := range line {
+			// grid[y] = append(grid[y], r)
 			if unicode.IsLetter(r) || unicode.IsDigit(r) {
 				if _, exists := frequencyMap[r]; !exists {
 					frequencyMap[r] = map[string]Point{}
@@ -69,6 +72,7 @@ func Puzzle(f string) (int, error) {
 			}
 		}
 	}
+	// printGrid(grid, antinodes)
 	return len(antinodes), nil
 }
 
