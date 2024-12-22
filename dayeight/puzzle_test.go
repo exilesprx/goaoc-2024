@@ -16,7 +16,7 @@ func TestExample(t *testing.T) {
 }
 
 func TestPuzzle(t *testing.T) {
-	t.Skipf("Skipping test")
+  // 254 is too high
 	result, err := Puzzle("puzzle.txt")
 	if err != nil {
 		t.Fatalf("Error: %v", err)
