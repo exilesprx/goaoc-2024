@@ -52,10 +52,10 @@ func Puzzle(f string) (int, error) {
 		i++
 	}
 
-  sum := 0
-  for i, n := range blocks {
-    sum += i * n
-  }
+	sum := 0
+	for i, n := range blocks {
+		sum += i * n
+	}
 
 	// printBlocks(blocks)
 	return sum, nil
